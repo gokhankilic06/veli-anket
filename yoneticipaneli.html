@@ -1,203 +1,172 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Yönetici Paneli</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riba Yönetici Paneli</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { padding: 20px; }
+    table th, table td { text-align: center; vertical-align: middle; }
+    .btn-danger { white-space: nowrap; }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2 class="mb-3">Veli Anketi - Yönetici Paneli</h2>
+    <p id="participantCount" class="fw-bold text-primary mb-3"></p>
 
-<div id="adminContent">
-  <h3 class="mb-3">Yönetici Paneli</h3>
-  <p id="participantCount" class="text-start ms-2">0 kişi ankete katılmıştır.</p>
-  <table class="table table-bordered table-sm" id="adminTable">
-    <thead>
-      <tr>
-        <th>Sıra No</th>
-        <th>Ad Soyad</th>
-        <th>Sınıf</th>
-        <th>Yanıtlar</th>
-        <th>İşlem</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td colspan="5">
-          <input class="form-control" id="filterInput" placeholder="Ad Soyad veya Sınıf filtrele" oninput="filterTable()">
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="text-end mt-2">
-    <button class="btn btn-danger btn-sm" onclick="resetAllData()">Verileri Sıfırla</button>
+    <button onclick="resetAllData()" class="btn btn-danger mb-4">Tüm Verileri Sıfırla</button>
+
+    <h4>Katılımcı Listesi</h4>
+    <table class="table table-bordered" id="adminTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Veli Adı</th>
+          <th>Sınıf</th>
+          <th>Cevaplar</th>
+          <th>İşlem</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h4 class="mt-5">Soru Bazlı İstatistikler</h4>
+    <table class="table table-bordered" id="questionStats">
+      <thead>
+        <tr>
+          <th>Soru</th>
+          <th>A Seçimi</th>
+          <th>B Seçimi</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <h4 class="mt-5">Bireysel Cevaplar (1 = Seçilen)</h4>
+    <table class="table table-bordered" id="individualAnswers">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Veli Adı</th>
+          <!-- 13 soru için dinamik başlık -->
+          <!-- Her soruya 2 kolon: A ve B -->
+          <!-- S1A, S1B, S2A, S2B, ..., S13A, S13B -->
+          <script>
+            document.write(Array.from({ length: 13 }, (_, i) =>
+              `<th>S${i+1}A</th><th>S${i+1}B</th>`).join(''));
+          </script>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
-  <h4 class="mt-5">Soru Bazlı Dağılım</h4>
-  <table class="table table-bordered table-sm" id="questionStats">
-    <thead>
-      <tr>
-        <th>Soru</th>
-        <th>A Seçeneği</th>
-        <th>B Seçeneği</th>
-        <th>Filtre</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <div class="text-end mt-2">
-    <button class="btn btn-secondary btn-sm" onclick="resetFilters()">Filtreyi Sıfırla</button>
-  </div>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
-  <h4 class="mt-5">Bireysel Yanıt Tablosu</h4>
-  <table class="table table-bordered table-sm" id="individualAnswers">
-    <thead>
-      <tr>
-        <th rowspan="2">No</th>
-        <th rowspan="2">Adı Soyadı</th>
-        <th colspan="2">M1</th>
-        <th colspan="2">M2</th>
-        <th colspan="2">M3</th>
-        <th colspan="2">M4</th>
-        <th colspan="2">M5</th>
-        <th colspan="2">M6</th>
-        <th colspan="2">M7</th>
-        <th colspan="2">M8</th>
-        <th colspan="2">M9</th>
-        <th colspan="2">M10</th>
-        <th colspan="2">M11</th>
-        <th colspan="2">M12</th>
-        <th colspan="2">M13</th>
-      </tr>
-      <tr>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-        <th>A</th><th>B</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-<h4 class="mt-5">Soruya Göre Filtrelenmiş Sonuçlar</h4>
-<table class="table table-bordered table-sm" id="filteredStats">
-  <thead>
-    <tr>
-      <th>Soru</th>
-      <th>A Seçen</th>
-      <th>B Seçen</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-</div>
+  <script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB4UdKx4pBjmoI6hasMD61e78G1bkiO3Z8",
+    authDomain: "velianket.firebaseapp.com",
+    databaseURL: "https://velianket-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "velianket",
+    storageBucket: "velianket.firebasestorage.app",
+    messagingSenderId: "1097322203364",
+    appId: "1:1097322203364:web:85dab0d1cabd07786104f1",
+    measurementId: "G-ZWLL9EZK5P"
+  };
 
-<script>
-let activeQuestionFilter = null;
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  let firebaseResults = [];
 
-function filterTable() {
-  const input = document.getElementById("filterInput").value.toLowerCase();
-  const rows = document.querySelectorAll("#adminTable tbody tr");
-  rows.forEach(row => {
-    const cells = row.querySelectorAll("td");
-    const name = cells[1]?.innerText.toLowerCase();
-    const cls = cells[2]?.innerText.toLowerCase();
-    const match = name?.includes(input) || cls?.includes(input);
-    row.style.display = match || !input ? "" : "none";
-  });
-}
-
-function filterByQuestion(index) {
-  const rows = document.querySelectorAll("#adminTable tbody tr");
-  rows.forEach(row => {
-    const yanitlar = row.cells[3].innerText.split(',');
-    const value = yanitlar[index]?.trim();
-    row.style.display = value === 'A' || value === 'B' ? '' : 'none';
-  });
-  activeQuestionFilter = index;
-}
-
-function resetFilters() {
-  document.getElementById("filterInput").value = "";
-  activeQuestionFilter = null;
-  const rows = document.querySelectorAll("#adminTable tbody tr");
-  rows.forEach(row => row.style.display = "");
-}
-
-function loadAdminData() {
-  updateQuestionStats();
-  updateIndividualAnswers();
-}
-
-function resetAllData() {
-  if (confirm('Tüm verileri silmek istediğinize emin misiniz?')) {
-    localStorage.removeItem('results');
-    loadAdminData();
-  }
-}
-
-function deleteEntry(index) {
-  const stored = JSON.parse(localStorage.getItem('results') || '[]');
-  if (confirm('Bu kaydı silmek istediğinize emin misiniz?')) {
-    stored.splice(index, 1);
-    localStorage.setItem('results', JSON.stringify(stored));
-    loadAdminData();
-  }
-}
-
-function updateIndividualAnswers() {
-  const stored = JSON.parse(localStorage.getItem('results') || '[]');
-  const tbody = document.querySelector('#individualAnswers tbody');
-  tbody.innerHTML = '';
-  stored.forEach((entry, index) => {
-    const tr = document.createElement('tr');
-    let row = `<td>${index + 1}</td><td>${entry.name}</td>`;
-    for (let i = 0; i < 13; i++) {
-      const isA = entry.answers[i] === 'A' ? '1' : '';
-      const isB = entry.answers[i] === 'B' ? '1' : '';
-      row += `<td>${isA}</td><td>${isB}</td>`;
-    }
-    tr.innerHTML = row;
-    tbody.appendChild(tr);
-  });
-}
-
-function updateQuestionStats() {
-  const stored = JSON.parse(localStorage.getItem('results') || '[]');
-  const stats = Array.from({ length: 13 }, () => ({ A: 0, B: 0 }));
-  stored.forEach(entry => {
-    entry.answers.forEach((answer, i) => {
-      if (answer === 'A') stats[i].A++;
-      else if (answer === 'B') stats[i].B++;
+  function fetchDataAndRender() {
+    db.ref("veliAnket").once("value").then(snapshot => {
+      const data = snapshot.val();
+      firebaseResults = data ? Object.values(data) : [];
+      loadAdminData();
     });
-  });
-  const tbody = document.querySelector('#questionStats tbody');
-  tbody.innerHTML = '';
-  stats.forEach((row, i) => {
-    const tr = document.createElement('tr');
-    const total = row.A + row.B;
-    const percent = total === 0 ? 0 : Math.round((row.A / total) * 100);
-    const percentB = total === 0 ? 0 : Math.round((row.B / total) * 100);
-    tr.innerHTML = `<td>${i + 1}. Soru</td><td>${row.A} (${percent}%)</td><td>${row.B} (${percentB}%)</td><td><button class="btn btn-sm btn-outline-primary" onclick="filterByQuestion(${i})">Filtrele</button></td>`;
-    tbody.appendChild(tr);
-  });
+  }
 
-  const filteredTbody = document.querySelector('#filteredStats tbody');
-  filteredTbody.innerHTML = '';
-  stats.forEach((row, i) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${i + 1}. Soru</td><td>${row.A}</td><td>${row.B}</td>`;
-    filteredTbody.appendChild(tr);
-  });
-}
-</script>
+  function resetAllData() {
+    if (confirm('Tüm verileri silmek istediğinize emin misiniz?')) {
+      db.ref("veliAnket").remove().then(() => {
+        firebaseResults = [];
+        loadAdminData();
+      });
+    }
+  }
+
+  function deleteEntry(index) {
+    const nameToDelete = firebaseResults[index].name;
+    db.ref("veliAnket").orderByChild("name").equalTo(nameToDelete).once("value", snapshot => {
+      snapshot.forEach(child => child.ref.remove());
+      fetchDataAndRender();
+    });
+  }
+
+  function loadAdminData() {
+    updateQuestionStats();
+    updateIndividualAnswers();
+
+    const tbody = document.querySelector("#adminTable tbody");
+    const countEl = document.getElementById("participantCount");
+    tbody.innerHTML = '';
+    firebaseResults.forEach((entry, index) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${entry.name}</td>
+        <td>${entry.className}</td>
+        <td>${entry.answers.join(", ")}</td>
+        <td><button class="btn btn-sm btn-danger" onclick="deleteEntry(${index})">Sil</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+    countEl.textContent = firebaseResults.length + " kişi ankete katılmıştır.";
+  }
+
+  function updateQuestionStats() {
+    const stats = Array.from({ length: 13 }, () => ({ A: 0, B: 0 }));
+    firebaseResults.forEach(entry => {
+      entry.answers.forEach((ans, i) => {
+        if (ans === 'A') stats[i].A++;
+        else if (ans === 'B') stats[i].B++;
+      });
+    });
+    const tbody = document.querySelector('#questionStats tbody');
+    tbody.innerHTML = '';
+    stats.forEach((row, i) => {
+      const total = row.A + row.B;
+      const percentA = total ? Math.round((row.A / total) * 100) : 0;
+      const percentB = total ? Math.round((row.B / total) * 100) : 0;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${i + 1}. Soru</td><td>${row.A} (${percentA}%)</td><td>${row.B} (${percentB}%)</td><td></td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function updateIndividualAnswers() {
+    const tbody = document.querySelector('#individualAnswers tbody');
+    tbody.innerHTML = '';
+    firebaseResults.forEach((entry, index) => {
+      const tr = document.createElement('tr');
+      let row = `<td>${index + 1}</td><td>${entry.name}</td>`;
+      for (let i = 0; i < 13; i++) {
+        const isA = entry.answers[i] === 'A' ? '1' : '';
+        const isB = entry.answers[i] === 'B' ? '1' : '';
+        row += `<td>${isA}</td><td>${isB}</td>`;
+      }
+      tr.innerHTML = row;
+      tbody.appendChild(tr);
+    });
+  }
+
+  window.onload = fetchDataAndRender;
+  </script>
 </body>
 </html>
