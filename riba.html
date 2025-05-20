@@ -11,23 +11,34 @@
   </style>
 </head>
 <body>
-  <div id="formSection" class="mt-4 form-section">
-    <input class="form-control mb-3" placeholder="Veli adı soyadı" id="name" required />
-    <select class="form-select mb-3" id="class" required>
-      <option selected disabled>Öğrencinin sınıfı</option>
-      <option>3-A</option><option>3-B</option><option>3-C</option><option>3-D</option><option>3-E</option><option>3-F</option><option>3-G</option><option>3-H</option>
-      <option>4-A</option><option>4-B</option><option>4-C</option><option>4-D</option><option>4-E</option><option>4-F</option><option>4-G</option><option>4-H</option>
-    </select>
-    <p><strong>Açıklama:</strong> Sayın Veli,
-Bu anketin amacı okulda öğrencilerimizin hangi rehberlik hizmetlerine ihtiyaç duyduğunu belirlemektir. Her
-soruda A ve B olmak üzere iki  rehberlik hizmeti verilmektedir. Sorulara yanıt verirken çocuğunuzun hangi
-konuda öncelikli olarak rehberlik hizmeti alması gerektiğini düşününüz. Soruda verilen iki rehberlik hizmetini
-karşılaştırınız ve bu hizmetlerden sadece bir tanesini seçiniz.</p>
-    <form onsubmit="submitForm(event)">
-      <div id="questions"></div>
-      <button type="submit" class="btn btn-success mt-3">Gönder</button>
-    </form>
+  <<div class="text-center mb-4">
+  <h4 class="fw-bold">Yavuz Sultan Selim İlkokulu</h4>
+  <h5 class="text-secondary">Riba Veli Anket Sistemi</h5>
+</div>
+
+<div id="formSection" class="form-section">
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <input type="text" class="form-control form-control-sm" placeholder="Ad Soyad" id="name" required />
+    </div>
+    <div class="col-md-6">
+      <select class="form-select form-select-sm" id="class" required>
+        <option selected disabled>Sınıf Seçiniz</option>
+        <option>3-A</option><option>3-B</option><option>3-C</option><option>3-D</option>
+        <option>3-E</option><option>3-F</option><option>3-G</option><option>3-H</option>
+        <option>4-A</option><option>4-B</option><option>4-C</option><option>4-D</option>
+        <option>4-E</option><option>4-F</option><option>4-G</option><option>4-H</option>
+      </select>
+    </div>
   </div>
+
+  <p ><strong>Açıklama:</strong> Sayın Veli, bu anketin amacı okulda öğrencilerimizin hangi rehberlik hizmetlerine ihtiyaç duyduğunu belirlemektir. Her soruda A ve B olmak üzere iki rehberlik hizmeti verilmektedir. Sorulara yanıt verirken çocuğunuzun hangi konuda öncelikli olarak rehberlik hizmeti alması gerektiğini düşününüz. Sadece birini seçiniz.</p>
+
+     <form onsubmit="submitForm(event)">
+    <div id="questions"></div>
+    <button type="submit" class="btn btn-success mt-3">Gönder</button>
+  </form>
+</div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
