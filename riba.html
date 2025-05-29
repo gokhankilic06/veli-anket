@@ -4,136 +4,177 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Riba Veli Anketi</title>
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body { padding: 20px; }
     .hidden { display: none; }
   </style>
 </head>
 <body>
-  <body>
   <div class="container">
     <div class="text-center mb-4">
       <h4 class="fw-bold">Yavuz Sultan Selim İlkokulu</h4>
       <h5 class="text-secondary">Riba Veli Anket Sistemi</h5>
     </div>
-<br>
-    <div class="card shadow-sm p-4 mb-4">
-      <div class="mb-3">
-        <label for="name" class="form-label">Ad Soyad</label>
-        <div class="input-group input-group-sm">
-          <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-          <input type="text" class="form-control" id="name" placeholder="Veli adı soyadı" required>
-        </div>
-      </div>
 
-      <div class="mb-3">
-        <label for="class" class="form-label">Sınıf</label>
-        <div class="input-group input-group-sm">
-          <span class="input-group-text"><i class="bi bi-mortarboard-fill"></i></span>
-          <select class="form-select" id="class" required>
-            <option selected disabled>Sınıf Seçiniz</option>
-            <option>1-A</option><option>1-B</option><option>1-C</option><option>1-D</option>
-            <option>1-E</option><option>1-F</option><option>1-G</option><option>1-H</option>
-            <option>2-A</option><option>2-B</option><option>2-C</option><option>2-D</option>
-            <option>2-E</option><option>2-F</option><option>2-G</option><option>2-H</option>
-            <option>3-A</option><option>3-B</option><option>3-C</option><option>3-D</option>
-            <option>3-E</option><option>3-F</option><option>3-G</option><option>3-H</option>
-            <option>4-A</option><option>4-B</option><option>4-C</option><option>4-D</option>
-            <option>4-E</option><option>4-F</option><option>4-G</option><option>4-H</option>
-          </select>
+    <form id="veliForm" class="needs-validation" novalidate onsubmit="submitForm(event)">
+      <div class="card shadow-sm p-4 mb-4">
+        <!-- Ad Soyad -->
+        <div class="mb-3">
+          <label for="name" class="form-label">Ad Soyad</label>
+          <div class="input-group input-group-sm has-validation">
+            <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              placeholder="Veli adı soyadı"
+              required
+            />
+            <div class="invalid-feedback">
+              Ad Soyad alanı boş geçilemez.
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="mb-3">
-        <p class="small text-muted" style="white-space: pre-line;">
+        <!-- Sınıf -->
+        <div class="mb-3">
+          <label for="class" class="form-label">Sınıf</label>
+          <div class="input-group input-group-sm has-validation">
+            <span class="input-group-text"><i class="bi bi-mortarboard-fill"></i></span>
+            <select class="form-select" id="class" required>
+              <option value="" selected disabled>Sınıf Seçiniz</option>
+              <option>1-A</option><option>1-B</option><option>1-C</option><option>1-D</option>
+              <option>1-E</option><option>1-F</option><option>1-G</option><option>1-H</option>
+              <option>2-A</option><option>2-B</option><option>2-C</option><option>2-D</option>
+              <option>2-E</option><option>2-F</option><option>2-G</option><option>2-H</option>
+              <option>3-A</option><option>3-B</option><option>3-C</option><option>3-D</option>
+              <option>3-E</option><option>3-F</option><option>3-G</option><option>3-H</option>
+              <option>4-A</option><option>4-B</option><option>4-C</option><option>4-D</option>
+              <option>4-E</option><option>4-F</option><option>4-G</option><option>4-H</option>
+            </select>
+            <div class="invalid-feedback">
+              Lütfen bir sınıf seçiniz.
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <p class="small text-muted" style="white-space: pre-line;">
 <strong>Açıklama:</strong> Sayın Veli,
 Bu anketin amacı okulda öğrencilerimizin hangi rehberlik hizmetlerine ihtiyaç duyduğunu belirlemektir. 
 Her soruda A ve B olmak üzere iki rehberlik hizmeti verilmektedir. 
 Sorulara yanıt verirken çocuğunuzun hangi konuda öncelikli olarak rehberlik hizmeti alması gerektiğini düşününüz. Sadece birini seçiniz.
-        </p>
+          </p>
+        </div>
+
+        <div id="questions"></div>
+
+        <button type="submit" class="btn btn-success btn-sm mt-3">Yanıtları Gönder</button>
       </div>
-    </div>
-<br>
-    <form onsubmit="submitForm(event)">
-      <div id="questions"></div>
-      <button type="submit" class="btn btn-success btn-sm mt-3">Yanıtları Gönder</button>
     </form>
   </div>
 
-  <!-- Bootstrap Icon CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Firebase + Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script>
+    // Bootstrap validation
+    (function () {
+      'use strict';
+      var forms = document.querySelectorAll('.needs-validation');
+      Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+          form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+    })();
 
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB4UdKx4pBjmoI6hasMD61e78G1bkiO3Z8",
+      authDomain: "velianket.firebaseapp.com",
+      databaseURL: "https://velianket-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "velianket",
+      storageBucket: "velianket.firebasestorage.app",
+      messagingSenderId: "1097322203364",
+      appId: "1:1097322203364:web:85dab0d1cabd07786104f1",
+      measurementId: "G-ZWLL9EZK5P"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyB4UdKx4pBjmoI6hasMD61e78G1bkiO3Z8",
-    authDomain: "velianket.firebaseapp.com",
-    databaseURL: "https://velianket-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "velianket",
-    storageBucket: "velianket.firebasestorage.app",
-    messagingSenderId: "1097322203364",
-    appId: "1:1097322203364:web:85dab0d1cabd07786104f1",
-    measurementId: "G-ZWLL9EZK5P"
-  };
+    // Soruları oluştur
+    const questions = [
+      ["A) Özgüvenini geliştirme", "B) Sağlıklı yaşam becerilerini (spor yapmak, sağlıklı beslenmek gibi) kazanma"],
+      ["A) Başarılı olmak için hedefler belirleme", "B) İlgilerini (kodlama, spor, resim, müzik gibi) keşfetme"],
+      ["A) Hem ilişkilerini hem de haklarını koruyacak şekilde çatışmalarını çözmeyi öğrenme", "B) Sorumluluklarının (ör., ödevlerini tamamlama, odasını, eşyalarını düzenleme ve temiz tutma) bilincinde olma"],
+      ["A) Rehber öğretmen/psikolojik danışmandan hangi konularda yardım alabileceğini öğrenme", "B) Aile üyeleriyle iletişimini güçlendirme"],
+      ["A) Arkadaş edinme ve arkadaşlık ilişkilerini sürdürme", "B) Okula devam etme isteğini arttırma"],
+      ["A) Tehlikeli olabilecek durumlarda (merdivenden inip çıkarken ya da koridorda koşma, servis kurallarına uyma gibi) dikkatli davranma", "B) Ders çalıştığı sırada silgiyle oynama, resim çizme gibi dikkatini dağıtan davranışlardan uzak durmayı öğrenme"],
+      ["A) Ders çalışma ortamını (odasını, masasını) nasıl düzenleyeceğini öğrenme", "B) Ortaokullar hakkında bilgi edinme"],
+      ["A) Duygularını ve isteklerini saygılı bir şekilde ifade etme", "B) Zorbalıkla karşılaştığında (ör., kötü söz söyleme, vurma) ne yapması gerektiğini bilme"],
+      ["A) Bilgisayar, cep telefonu, tablet veya televizyonu kullanırken uygun içerik seçme ve kullanma süresini belirleme", "B) Yeteneklerini (neleri iyi yapabildiğini) tanıma"],
+      ["A) Okuldaki kulüpler (spor, satranç, tiyatro vb.) ve yarışmalar gibi etkinlikler hakkında bilgilenme", "B) Verimli ders çalışmayı öğrenme"],
+      ["A) İstismardan korunmayı öğrenme", "B) Derslerde zorlandığında bile çalışarak başarılı olacağına inanma"],
+      ["A) Kendini korumak için “HAYIR” diyebilmeyi öğrenme", "B) Meslek edinmenin önemini anlama"],
+      ["A) Ders çalışmak ve oyun oynamak için zamanını planlama", "B) Zorlandığı konularda doğru kişilerden yardım isteme (ör., zorbalığa uğradığında bir yetişkinden yardım isteme; dersi anlamadığında öğretmeninden yardım isteme)"]
+    ];
+    const qContainer = document.getElementById("questions");
+    questions.forEach((pair, i) => {
+      const div = document.createElement("div");
+      div.className = "mb-3";
+      div.innerHTML = `
+        <strong>${i + 1}. Aşağıdakilerden hangisi çocuğunuz için daha önemlidir?</strong><br>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="q${i}" id="q${i}A" value="A" required>
+          <label class="form-check-label" for="q${i}A">${pair[0]}</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="q${i}" id="q${i}B" value="B">
+          <label class="form-check-label" for="q${i}B">${pair[1]}</label>
+        </div>
+      `;
+      qContainer.appendChild(div);
+    });
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+    // Form gönderme
+    function submitForm(e) {
+      e.preventDefault();
+      var form = document.getElementById("veliForm");
+      if (!form.checkValidity()) {
+        form.classList.add("was-validated");
+        return;
+      }
 
-  const questions = [
-    ["A) Özgüvenini geliştirme", "B) Sağlıklı yaşam becerilerini (spor yapmak, sağlıklı beslenmek gibi) kazanma"],
-    ["A) Başarılı olmak için hedefler belirleme", "B) İlgilerini (kodlama, spor, resim, müzik gibi) keşfetme"],
-    ["A) Hem ilişkilerini hem de haklarını koruyacak şekilde çatışmalarını çözmeyi öğrenme", "B) Sorumluluklarının (ör., ödevlerini tamamlama, odasını, eşyalarını düzenleme ve temiz tutma) bilincinde olma"],
-    ["A) Rehber öğretmen/psikolojik danışmandan hangi konularda yardım alabileceğini öğrenme", "B) Aile üyeleriyle iletişimini güçlendirme"],
-    ["A) Arkadaş edinme ve arkadaşlık ilişkilerini sürdürme", "B) Okula devam etme isteğini arttırma"],
-    ["A) Tehlikeli olabilecek durumlarda (merdivenden inip çıkarken ya da koridorda koşma, servis kurallarına uyma gibi) dikkatli davranma", "B) Ders çalıştığı sırada silgiyle oynama, resim çizme gibi dikkatini dağıtan davranışlardan uzak durmayı öğrenme"],
-    ["A) Ders çalışma ortamını (odasını, masasını) nasıl düzenleyeceğini öğrenme", "B) Ortaokullar hakkında bilgi edinme"],
-    ["A) Duygularını ve isteklerini saygılı bir şekilde ifade etme", "B) Zorbalıkla karşılaştığında (ör., kötü söz söyleme, vurma) ne yapması gerektiğini bilme"],
-    ["A) Bilgisayar, cep telefonu, tablet veya televizyonu kullanırken uygun içerik seçme ve kullanma süresini belirleme", "B) Yeteneklerini (neleri iyi yapabildiğini) tanıma"],
-    ["A) Okuldaki kulüpler (spor, satranç, tiyatro vb.) ve yarışmalar gibi etkinlikler hakkında bilgilenme", "B) Verimli ders çalışmayı öğrenme"],
-    ["A) İstismardan korunmayı öğrenme", "B) Derslerde zorlandığında bile çalışarak başarılı olacağına inanma"],
-    ["A) Kendini korumak için “HAYIR” diyebilmeyi öğrenme", "B) Meslek edinmenin önemini anlama"],
-    ["A) Ders çalışmak ve oyun oynamak için zamanını planlama", "B) Zorlandığı konularda doğru kişilerden yardım isteme (ör., zorbalığa uğradığında bir yetişkinden yardım isteme; dersi anlamadığında öğretmeninden yardım isteme)"]
-  ];
+      const name = document.getElementById("name").value.trim();
+      const className = document.getElementById("class").value;
+      const answers = [];
+      for (let i = 0; i < questions.length; i++) {
+        answers.push(document.querySelector(`input[name="q${i}"]:checked`).value);
+      }
 
-  const qContainer = document.getElementById("questions");
-  questions.forEach((pair, i) => {
-    const div = document.createElement("div");
-    div.className = "mb-3";
-    div.innerHTML = `
-      <strong>${i + 1}. Aşağıdakilerden hangisi çocuğunuz için daha önemlidir?</strong><br>
-      <label><input type="radio" name="q${i}" value="A" required> ${pair[0]}</label><br>
-      <label><input type="radio" name="q${i}" value="B"> ${pair[1]}</label>
-    `;
-    qContainer.appendChild(div);
-  });
-
-  function submitForm(e) {
-    e.preventDefault();
-    const name = document.getElementById("name").value;
-    const className = document.getElementById("class").value;
-    const answers = [];
-    for (let i = 0; i < 13; i++) {
-      const selected = document.querySelector(`input[name='q${i}']:checked`);
-      if (!selected) return alert("Lütfen tüm soruları yanıtlayınız.");
-      answers.push(selected.value);
+      const newEntry = db.ref("veliAnket").push();
+      newEntry.set({ name, className, answers })
+        .then(() => {
+          alert("Yanıtınız kaydedildi. Teşekkür ederiz.");
+          form.reset();
+          form.classList.remove("was-validated");
+        })
+        .catch(error => {
+          console.error("Firebase hatası:", error);
+          alert("Bir hata oluştu. Lütfen tekrar deneyiniz.");
+        });
     }
-
-    const newEntry = db.ref("veliAnket").push();
-    newEntry.set({ name, className, answers })
-      .then(() => {
-        alert("Yanıtınız kaydedildi. Teşekkür ederiz.");
-        document.querySelector("form").reset();
-document.getElementById("name").value = "";
-document.getElementById("class").selectedIndex = 0;
-      })
-      .catch(error => {
-        console.error("Firebase hatası:", error);
-        alert("Bir hata oluştu. Lütfen tekrar deneyiniz.");
-      });
-  }
-</script>
+  </script>
 </body>
 </html>
